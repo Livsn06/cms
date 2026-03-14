@@ -7,7 +7,6 @@ import Heading from '@/components/Heading.vue';
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableFooter,
     TableHead,
@@ -26,7 +25,7 @@ import {
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { EllipsisVertical, ListCollapse, Pencil, Settings, Trash, User } from 'lucide-vue-next';
+import { EllipsisVertical, ListCollapse, Pencil, Trash } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { computed } from 'vue';
 import { formatDate, formatPriceWithCurrency } from '@/lib/formatters';
