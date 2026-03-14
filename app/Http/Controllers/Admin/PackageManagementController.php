@@ -12,7 +12,7 @@ class PackageManagementController extends Controller
     public function index(): \Inertia\Response
     {
         return Inertia::render('admin/package/PackageManagement', [
-            'packages' => Package::latest()->orderBy('created_at', 'desc')->get(),
+            'packagesData' => Package::latest()->orderBy('created_at', 'desc')->get(),
         ]);
     }
 }
