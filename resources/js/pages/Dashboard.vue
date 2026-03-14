@@ -45,3 +45,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         </div>
     </AppLayout>
 </template> -->
+
+<script></script>
+<template></template>
