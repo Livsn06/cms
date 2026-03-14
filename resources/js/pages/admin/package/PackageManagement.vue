@@ -1,19 +1,13 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { packages } from '@/routes/admin';
-import type { BreadcrumbItem } from '@/types';
+
+
+import { EllipsisVertical, ListCollapse, Pencil, Trash } from 'lucide-vue-next';
+import { ref } from 'vue';
+import { computed } from 'vue';
 import Heading from '@/components/Heading.vue';
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table'
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import {
     Pagination,
     PaginationContent,
@@ -22,14 +16,19 @@ import {
     PaginationPrevious,
     PaginationEllipsis
 } from '@/components/ui/pagination'
-
-
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { EllipsisVertical, ListCollapse, Pencil, Settings, Trash, User } from 'lucide-vue-next';
-import { ref } from 'vue';
-import { computed } from 'vue';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table'
+import AppLayout from '@/layouts/AppLayout.vue';
 import { formatDate, formatPriceWithCurrency } from '@/lib/formatters';
+import { packages } from '@/routes/admin';
+import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -50,7 +49,7 @@ interface Package {
 
 
 const props = defineProps<{
-    packages: Package[];
+    packagesData: Package[];
 }>();
 
 
@@ -62,7 +61,8 @@ const itemsPerPage = 10
 const paginatedPackages = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage
     const end = start + itemsPerPage
-    return props.packages.slice(start, end)
+
+    return props.packagesData.slice(start, end)
 })
 
 
@@ -142,10 +142,11 @@ const paginatedPackages = computed(() => {
                             <TableCell colspan="5">
                                 <div class="flex items-center justify-between px-2 py-2">
                                     <span class="text-sm text-muted-foreground">
-                                        Page {{ currentPage }} of {{ Math.ceil(props.packages.length / itemsPerPage) }}
+                                        Page {{ currentPage }} of {{ Math.ceil(props.packagesData.length / itemsPerPage)
+                                        }}
                                     </span>
 
-                                    <Pagination v-model:page="currentPage" :total="props.packages.length"
+                                    <Pagination v-model:page="currentPage" :total="props.packagesData.length"
                                         :items-per-page="itemsPerPage" :sibling-count="1" show-edges>
                                         <PaginationContent v-slot="{ items }">
                                             <PaginationPrevious />
