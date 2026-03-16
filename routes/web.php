@@ -4,11 +4,11 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\PackageManagementController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
+use Inertia\Inertia;
 
-// Route::inertia('/', 'Welcome', [
-//     'canRegister' => Features::enabled(Features::registration()),
-// ])->name('home');
+// Route::inertia('/', function(){
+//     return Inertia::render('admin/auth/Login');
+// })->name('home');
 
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
@@ -27,6 +27,12 @@ Route::prefix('admin')->group(function () {
 
         //
         Route::get('/packages', [PackageManagementController::class, 'index'])->name('admin.packages');
+        Route::get('/packages/create', [PackageManagementController::class, 'create'])->name('admin.packages.create');
+        Route::post('/packages/store', [PackageManagementController::class, 'store'])->name('admin.packages.store');
+        Route::get('/packages/{package}/show', [PackageManagementController::class, 'show'])->name('admin.packages.show');
+        Route::get('/packages/{package}/edit', [PackageManagementController::class, 'edit'])->name('admin.packages.edit');
+        Route::put('/packages/{package}/update', [PackageManagementController::class, 'update'])->name('admin.packages.update');
+        Route::delete('/packages/{package}/destroy', [PackageManagementController::class, 'destroy'])->name('admin.packages.destroy');
         //
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
     });
