@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Calendar, Users, Phone, ArrowLeft, Download, PartyPopper } from "lucide-vue-next";
+import { Calendar, Users, Phone, ArrowLeft, Download, PartyPopper } from "lucide-vue-next";
 import { computed } from 'vue';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 interface Package {
     id: number;

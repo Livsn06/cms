@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useForm, Head, Link } from '@inertiajs/vue3';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ChevronRight, UtensilsCrossed, Users, Calendar, Phone } from "lucide-vue-next";
 import { computed } from 'vue';
-import { store } from '@/routes/booking';
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { formatPriceWithCurrency } from '@/lib/formatters';
+import { store } from '@/routes/booking';
 
 // Types matching your Schema
 interface Package {
