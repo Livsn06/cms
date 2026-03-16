@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import { CheckCircle2 } from "lucide-vue-next";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle2 } from "lucide-vue-next";
-import { formatPriceWithCurrency } from '@/lib/formatters';
 import ClientLayout from '@/layouts/ClientLayout.vue';
+import { formatPriceWithCurrency } from '@/lib/formatters';
 
 interface Package {
     id: number;
@@ -18,7 +18,7 @@ interface Package {
 }
 
 // Define props with TypeScript
-const props = defineProps<{
+defineProps<{
     packages: Package[];
 }>();
 
