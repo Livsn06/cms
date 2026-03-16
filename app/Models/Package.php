@@ -14,4 +14,9 @@ class Package extends Model
         'price',
         'image'
     ];
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }
