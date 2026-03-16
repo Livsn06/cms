@@ -107,7 +107,7 @@ const paginatedBookings = computed(() => {
     return filteredBookings.value.slice(start, end)
 });
 
-const totalPages = computed(() => Math.ceil(filteredBookings.value.length / itemsPerPage));
+// const totalPages = computed(() => Math.ceil(filteredBookings.value.length / itemsPerPage));
 
 // --- Actions ---
 const isDeleteModalOpen = ref(false)
@@ -139,10 +139,12 @@ const confirmDelete = () => {
 
 const editBooking = (id: number) => {
     // router.get(route('admin.bookings.edit', id));
+    console.log(id);
 };
 
 const viewBooking = (id: number) => {
     // router.get(route('admin.bookings.show', id));
+    console.log(id);
 };
 
 // Helper for status badge colors
