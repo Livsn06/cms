@@ -3,9 +3,9 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import { EllipsisVertical, ListCollapse, Pencil, Trash, Search, Plus, Image } from 'lucide-vue-next';
 import { ref, computed, watch } from 'vue';
 
+import CustomConfirmModal from '@/components/CustomConfirmModal.vue';
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input'; // Ensure you have an Input component
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,6 +16,7 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input'; // Ensure you have an Input component
 import {
     Pagination,
     PaginationContent,
@@ -36,10 +37,8 @@ import {
 import AppLayout from '@/layouts/AppLayout.vue';
 import { formatDate, formatPriceWithCurrency } from '@/lib/formatters';
 import { packages } from '@/routes/admin';
-import type { BreadcrumbItem } from '@/types';
 import { create, destroy, edit, show } from '@/routes/admin/packages';
-import CustomConfirmModal from '@/components/CustomConfirmModal.vue';
-import CustomToast from '@/components/CustomToast.vue';
+import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -69,9 +68,12 @@ const searchQuery = ref('')
 
 // --- Search Logic ---
 const filteredPackages = computed(() => {
-    if (!searchQuery.value) return props.packagesData;
+    if (!searchQuery.value) {
+        return props.packagesData;
+    }
 
     const query = searchQuery.value.toLowerCase();
+
     return props.packagesData.filter(pkg =>
         pkg.name.toLowerCase().includes(query) ||
         pkg.description.toLowerCase().includes(query) ||
@@ -88,6 +90,7 @@ watch(searchQuery, () => {
 const paginatedPackages = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage
     const end = start + itemsPerPage
+
     return filteredPackages.value.slice(start, end)
 });
 
@@ -111,7 +114,9 @@ const promptDelete = (id: number) => {
 const isDeleting = ref(false);
 
 const confirmDelete = () => {
-    if (!selectedPackageId.value) return;
+    if (!selectedPackageId.value) {
+        return;
+    }
 
     router.delete(destroy(selectedPackageId.value), {
         onStart: () => {

@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import AppLayout from '@/layouts/AppLayout.vue';
 import { Edit, Trash2, ChevronLeft, Package as PackageIcon } from 'lucide-vue-next';
-import type { BreadcrumbItem } from '@/types';
-import { packages } from '@/routes/admin';
-import { edit, destroy } from '@/routes/admin/packages';
-import { formatDate, formatPriceWithCurrency } from '@/lib/formatters';
 import { ref } from 'vue';
 import CustomConfirmModal from '@/components/CustomConfirmModal.vue';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { formatDate, formatPriceWithCurrency } from '@/lib/formatters';
+import { packages } from '@/routes/admin';
+import { edit, destroy } from '@/routes/admin/packages';
+import type { BreadcrumbItem } from '@/types';
 
 interface Package {
     id: number;
@@ -52,7 +52,9 @@ const promptDelete = (id: number) => {
 const isDeleting = ref(false);
 
 const confirmDelete = () => {
-    if (!selectedPackageId.value) return;
+    if (!selectedPackageId.value) {
+return;
+}
 
     router.delete(destroy(selectedPackageId.value), {
         onStart: () => {

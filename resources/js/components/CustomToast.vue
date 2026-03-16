@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { CheckCircle2, X } from 'lucide-vue-next';
+import { ref, computed, watch } from 'vue';
 
 type SharedProps = {
     auth: { user: any };

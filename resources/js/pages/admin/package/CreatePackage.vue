@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
+import { XCircleIcon } from 'lucide-vue-next';
 import { ref, useTemplateRef } from 'vue';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem } from '@/types';
 import { packages } from '@/routes/admin';
 import { create, store } from '@/routes/admin/packages';
-import { Textarea } from '@/components/ui/textarea';
-import { Spinner } from '@/components/ui/spinner';
-import { XCircleIcon } from 'lucide-vue-next';
+import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     { title: 'Packages', href: packages() },
@@ -42,10 +42,12 @@ const fileInput = useTemplateRef<HTMLInputElement>('fileInput');
  */
 const handleImageChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
+
     if (target.files && target.files[0]) {
         if (imagePreview.value) {
             URL.revokeObjectURL(imagePreview.value);
         }
+
         const file = target.files[0];
         imagePreview.value = URL.createObjectURL(file);
         form.image = file; // Assign file to useForm
@@ -60,7 +62,9 @@ const clearImage = () => {
         URL.revokeObjectURL(imagePreview.value);
         imagePreview.value = null;
     }
+
     form.image = null;
+
     if (fileInput.value) {
         fileInput.value.value = '';
     }

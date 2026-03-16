@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { useForm, Head } from '@inertiajs/vue3';
+import { XCircleIcon, RotateCcw } from 'lucide-vue-next';
 import { ref, useTemplateRef, computed, watch } from 'vue';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem } from '@/types';
 import { packages } from '@/routes/admin';
 import { update } from '@/routes/admin/packages';
-import { Textarea } from '@/components/ui/textarea';
-import { Spinner } from '@/components/ui/spinner';
-import { XCircleIcon, RotateCcw } from 'lucide-vue-next';
+import type { BreadcrumbItem } from '@/types';
 
 interface Package {
     id: number;
@@ -24,7 +24,6 @@ interface Package {
 }
 
 const props = defineProps<{
-    breadcrumbItems: Array<{ title: string; href: string }>;
     package: Package;
 }>();
 
@@ -59,6 +58,7 @@ const hasChanges = computed(() => {
  */
 const handleImageChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
+
     if (target.files && target.files[0]) {
         const file = target.files[0];
         form.image = file;
@@ -67,6 +67,7 @@ const handleImageChange = (e: Event) => {
         if (isLocalBlob.value) {
             URL.revokeObjectURL(imagePreview.value!);
         }
+
         imagePreview.value = URL.createObjectURL(file);
     }
 };
@@ -78,10 +79,14 @@ const clearImage = () => {
     if (isLocalBlob.value) {
         URL.revokeObjectURL(imagePreview.value!);
     }
+
     imagePreview.value = null;
     form.image = null;
     form.old_image = null; // Tells the controller to delete the image entirely
-    if (fileInput.value) fileInput.value.value = '';
+
+    if (fileInput.value) {
+        fileInput.value.value = '';
+    }
 };
 
 /**
@@ -89,13 +94,18 @@ const clearImage = () => {
  */
 const resetForm = () => {
     form.reset(); // Reverts name, price, description based on defaults
+
     if (isLocalBlob.value) {
         URL.revokeObjectURL(imagePreview.value!);
     }
+
     imagePreview.value = props.package.old_image;
     form.old_image = props.package.old_image;
     form.image = null;
-    if (fileInput.value) fileInput.value.value = '';
+
+    if (fileInput.value) {
+        fileInput.value.value = '';
+    }
 };
 
 const submit = () => {
@@ -105,7 +115,9 @@ const submit = () => {
     form.post(routeData.url, {
         preserveScroll: true,
         onSuccess: () => {
-            if (fileInput.value) fileInput.value.value = '';
+            if (fileInput.value) {
+                fileInput.value.value = '';
+            }
         },
     });
 };
