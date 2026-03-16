@@ -186,17 +186,22 @@ const viewPackage = (id: number) => {
                             <TableCell class="font-medium">#{{ pkg.id }}</TableCell>
                             <TableCell>
                                 <div class="flex items-center">
-                                    <div class="mr-4">
+                                    <div class="mr-4 shrink-0">
                                         <img v-if="pkg.image" :src="pkg.image" alt="Package Image"
-                                            class="size-8 rounded-md" />
+                                            class="size-8 rounded-md object-cover" />
                                         <div v-else
                                             class="size-8 rounded-md flex items-center justify-center bg-muted-foreground">
-                                            <Image class="size-6" />
+                                            <Image class="size-6 text-white" />
                                         </div>
                                     </div>
-                                    <div>
-                                        <div class="font-medium">{{ pkg.name }}</div>
-                                        <div class="text-xs text-muted-foreground line-clamp-1">{{ pkg.description }}
+
+                                    <div class="flex-1 min-w-0 max-w-[200px] md:max-w-[300px] lg:max-w-[400px]">
+                                        <div class="font-medium truncate" :title="pkg.name">
+                                            {{ pkg.name }}
+                                        </div>
+                                        <div class="text-xs text-muted-foreground line-clamp-1 text-ellipsis"
+                                            :title="pkg.description">
+                                            {{ pkg.description }}
                                         </div>
                                     </div>
                                 </div>

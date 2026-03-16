@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid, Package } from 'lucide-vue-next';
+import { BookImageIcon, BookOpen, FolderGit2, LayoutGrid, Package } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -14,7 +14,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, packages } from '@/routes/admin';
+import { bookings, dashboard, packages } from '@/routes/admin';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -27,6 +27,11 @@ const mainNavItems: NavItem[] = [
         title: 'Packages',
         href: packages(),
         icon: Package,
+    },
+    {
+        title: 'Bookings',
+        href: bookings(),
+        icon: BookImageIcon,
     },
 ];
 
