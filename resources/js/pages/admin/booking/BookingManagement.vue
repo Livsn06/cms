@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
-import { EllipsisVertical, ListCollapse, Pencil, Trash, Search, Plus, Image, Calendar, Users, Phone } from 'lucide-vue-next';
+import { Head } from '@inertiajs/vue3';
+import { EllipsisVertical, ListCollapse, Pencil, Trash, Search, Image, Calendar, Users, Phone } from 'lucide-vue-next';
+import { Copy, Check } from 'lucide-vue-next';
 import { ref, computed, watch } from 'vue';
 
-import { Copy, Check } from 'lucide-vue-next';
 
 
 import CustomConfirmModal from '@/components/CustomConfirmModal.vue';
 import Heading from '@/components/Heading.vue';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -17,7 +17,6 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
@@ -39,7 +38,7 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import AppLayout from '@/layouts/AppLayout.vue';
-import { formatDate, formatPriceWithCurrency } from '@/lib/formatters';
+import { formatDate } from '@/lib/formatters';
 import type { BreadcrumbItem } from '@/types';
 
 // Updated breadcrumbs
@@ -122,7 +121,9 @@ const promptDelete = (id: number) => {
 const isDeleting = ref(false);
 
 const confirmDelete = () => {
-    if (!selectedBookingId.value) return;
+    if (!selectedBookingId.value) {
+        return;
+    }
 
     // Replace with your actual delete route
     // router.delete(route('admin.bookings.destroy', selectedBookingId.value), {
