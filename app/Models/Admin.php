@@ -9,7 +9,6 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class Admin extends Authenticatable
 {
-    protected $table = 'admins';
 
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;

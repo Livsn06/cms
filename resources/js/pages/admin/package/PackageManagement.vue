@@ -1,13 +1,22 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { EllipsisVertical, ListCollapse, Pencil, Trash, Search, Plus, Image } from 'lucide-vue-next';
+import { ref, computed, watch } from 'vue';
 
-
-import { EllipsisVertical, ListCollapse, Pencil, Trash } from 'lucide-vue-next';
-import { ref } from 'vue';
-import { computed } from 'vue';
+import CustomConfirmModal from '@/components/CustomConfirmModal.vue';
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input'; // Ensure you have an Input component
 import {
     Pagination,
     PaginationContent,
@@ -28,6 +37,7 @@ import {
 import AppLayout from '@/layouts/AppLayout.vue';
 import { formatDate, formatPriceWithCurrency } from '@/lib/formatters';
 import { packages } from '@/routes/admin';
+import { create, destroy, edit, show } from '@/routes/admin/packages';
 import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -37,45 +47,128 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-
 interface Package {
     id: number;
     name: string;
     description: string;
     price: number;
+    image: string | null;
     created_at: string;
     updated_at: string;
 }
-
 
 const props = defineProps<{
     packagesData: Package[];
 }>();
 
-
-// --- Pagination State ---
+// --- State ---
 const currentPage = ref(1)
 const itemsPerPage = 10
+const searchQuery = ref('')
 
-// --- Logic to "Slice" the Table ---
+// --- Search Logic ---
+const filteredPackages = computed(() => {
+    if (!searchQuery.value) {
+        return props.packagesData;
+    }
+
+    const query = searchQuery.value.toLowerCase();
+
+    return props.packagesData.filter(pkg =>
+        pkg.name.toLowerCase().includes(query) ||
+        pkg.description.toLowerCase().includes(query) ||
+        pkg.id.toString().includes(query)
+    );
+});
+
+// Reset page to 1 when searching
+watch(searchQuery, () => {
+    currentPage.value = 1;
+});
+
+// --- Pagination Logic (Slices the FILTERED results) ---
 const paginatedPackages = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage
     const end = start + itemsPerPage
 
-    return props.packagesData.slice(start, end)
-})
+    return filteredPackages.value.slice(start, end)
+});
+
+const totalPages = computed(() => Math.ceil(filteredPackages.value.length / itemsPerPage));
 
 
+
+///====================
+
+// State for the modal
+const isDeleteModalOpen = ref(false)
+const selectedPackageId = ref<number | null>(null)
+
+// Open modal and store the ID
+const promptDelete = (id: number) => {
+    selectedPackageId.value = id
+    isDeleteModalOpen.value = true
+}
+
+// Logic when user clicks "Continue"
+const isDeleting = ref(false);
+
+const confirmDelete = () => {
+    if (!selectedPackageId.value) {
+        return;
+    }
+
+    router.delete(destroy(selectedPackageId.value), {
+        onStart: () => {
+            isDeleting.value = true;
+        },
+        onSuccess: () => {
+            isDeleteModalOpen.value = false;
+            selectedPackageId.value = null;
+        },
+        onFinish: () => {
+            isDeleting.value = false;
+        },
+        preserveScroll: true,
+    });
+};
+
+
+
+const editPackage = (id: number) => {
+    router.get(edit(id));
+};
+
+
+const viewPackage = (id: number) => {
+    router.get(show(id));
+};
 
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
 
-        <Head title="Dashboard" />
+        <Head title="Packages" />
 
         <div class="p-8">
-            <Heading title="Service Packages" description="Manage, create and view all your packages" />
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                <Heading title="Service Packages" description="Manage, create and view all your packages" />
+                <div class="flex gap-4">
+                    <div class="relative w-full md:w-72">
+                        <Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input v-model="searchQuery" placeholder="Search packages..." class="pl-9" />
+                    </div>
+                    <Link :href="create()">
+                        <Button>
+                            <Plus class="mr-1 h-4 w-4" />
+                            New Package
+                        </Button>
+                    </Link>
+                </div>
+
+            </div>
+
             <div class="w-full rounded-md border">
                 <Table>
                     <TableHeader>
@@ -92,8 +185,21 @@ const paginatedPackages = computed(() => {
                         <TableRow v-for="pkg in paginatedPackages" :key="pkg.id">
                             <TableCell class="font-medium">#{{ pkg.id }}</TableCell>
                             <TableCell>
-                                <div class="font-medium">{{ pkg.name }}</div>
-                                <div class="text-xs text-muted-foreground line-clamp-1">{{ pkg.description }}</div>
+                                <div class="flex items-center">
+                                    <div class="mr-4">
+                                        <img v-if="pkg.image" :src="pkg.image" alt="Package Image"
+                                            class="size-8 rounded-md" />
+                                        <div v-else
+                                            class="size-8 rounded-md flex items-center justify-center bg-muted-foreground">
+                                            <Image class="size-6" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">{{ pkg.name }}</div>
+                                        <div class="text-xs text-muted-foreground line-clamp-1">{{ pkg.description }}
+                                        </div>
+                                    </div>
+                                </div>
                             </TableCell>
                             <TableCell>{{ formatPriceWithCurrency(pkg.price) }}</TableCell>
                             <TableCell class="text-right">{{ formatDate(pkg.created_at) }}</TableCell>
@@ -109,17 +215,18 @@ const paginatedPackages = computed(() => {
                                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuGroup>
-                                            <DropdownMenuItem>
+                                            <DropdownMenuItem @click="viewPackage(pkg.id)">
                                                 <ListCollapse class="mr-2 h-4 w-4" />
                                                 <span>View Details</span>
                                                 <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem>
+                                            <DropdownMenuItem @click="editPackage(pkg.id)">
                                                 <Pencil class="mr-2 h-4 w-4" />
                                                 <span>Edit</span>
                                                 <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem class="text-red-600 focus:text-red-600">
+                                            <DropdownMenuItem @click="promptDelete(pkg.id)"
+                                                class="text-red-600 focus:text-red-600">
                                                 <Trash class="mr-2 h-4 w-4" />
                                                 <span>Delete</span>
                                                 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
@@ -137,16 +244,16 @@ const paginatedPackages = computed(() => {
                         </TableRow>
                     </TableBody>
 
-                    <TableFooter>
+                    <TableFooter v-if="filteredPackages.length > 0">
                         <TableRow>
                             <TableCell colspan="5">
                                 <div class="flex items-center justify-between px-2 py-2">
                                     <span class="text-sm text-muted-foreground">
-                                        Page {{ currentPage }} of {{ Math.ceil(props.packagesData.length / itemsPerPage)
-                                        }}
+                                        Showing {{ paginatedPackages.length }} of {{ filteredPackages.length }} results
+                                        (Page {{ currentPage }} of {{ totalPages }})
                                     </span>
 
-                                    <Pagination v-model:page="currentPage" :total="props.packagesData.length"
+                                    <Pagination v-model:page="currentPage" :total="filteredPackages.length"
                                         :items-per-page="itemsPerPage" :sibling-count="1" show-edges>
                                         <PaginationContent v-slot="{ items }">
                                             <PaginationPrevious />
@@ -171,5 +278,11 @@ const paginatedPackages = computed(() => {
                 </Table>
             </div>
         </div>
+
+
+
+        <CustomConfirmModal v-model:open="isDeleteModalOpen" :loading="isDeleting" title="Delete Package?"
+            description="This will permanently delete the service package. This action cannot be undone."
+            confirmText="Delete" variant="destructive" @confirm="confirmDelete" />
     </AppLayout>
 </template>
