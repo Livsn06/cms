@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LandingController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\PackageManagementController;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,9 @@ use Inertia\Inertia;
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 // });
+
+
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 
 
