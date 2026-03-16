@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BookingManagementController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Client\LandingController;
 use App\Http\Controllers\Admin\LoginController;
@@ -41,6 +42,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/packages/{package}/edit', [PackageManagementController::class, 'edit'])->name('admin.packages.edit');
         Route::put('/packages/{package}/update', [PackageManagementController::class, 'update'])->name('admin.packages.update');
         Route::delete('/packages/{package}/destroy', [PackageManagementController::class, 'destroy'])->name('admin.packages.destroy');
+        //
+
+        Route::get('/bookings', [BookingManagementController::class, 'index'])->name('admin.bookings');
+
+
         //
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
     });
