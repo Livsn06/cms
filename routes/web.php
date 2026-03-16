@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\LandingController;
+use App\Http\Controllers\Client\LandingController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\PackageManagementController;
+use App\Http\Controllers\Client\BookingController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -17,6 +18,9 @@ use Inertia\Inertia;
 
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/booking/{package}', [BookingController::class, 'index'])->name('booking');
+Route::post('/booking/store', [BookingController::class, 'store'])->name('booking.store');
+Route::get('/booking/{booking}/success', [BookingController::class, 'success'])->name('booking.success');
 
 
 
