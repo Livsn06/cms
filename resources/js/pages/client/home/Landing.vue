@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { CheckCircle2 } from "lucide-vue-next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import ClientLayout from '@/layouts/ClientLayout.vue';
 import { formatPriceWithCurrency } from '@/lib/formatters';
+import { booking } from '@/routes';
 
 interface Package {
     id: number;
@@ -133,10 +134,12 @@ const scrollToPackages = (): void => {
                                 </CardDescription>
                             </CardHeader>
                             <CardFooter class="pb-8">
-                                <Button
-                                    class="w-full bg-slate-900 hover:bg-orange-600 text-white transition-colors py-6">
-                                    Book Now
-                                </Button>
+                                <Link :href="booking(pkg.id)" class="w-full block">
+                                    <Button
+                                        class="w-full bg-slate-900 hover:bg-orange-600 text-white transition-colors py-6">
+                                        Book Now
+                                    </Button>
+                                </Link>
                             </CardFooter>
                         </Card>
                     </div>
