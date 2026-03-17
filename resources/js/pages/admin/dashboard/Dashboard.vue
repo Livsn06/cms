@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import CustomStatCard from '@/components/CustomStatCard.vue';
 import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes/admin';
 import type { BreadcrumbItem } from '@/types';
-import CustomStatCard from '@/components/CustomStatCard.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -14,7 +14,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 
-const props = defineProps<{
+defineProps<{
     stats: {
         totalBookings: number;
         activePackages: number;
