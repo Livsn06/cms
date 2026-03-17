@@ -5,6 +5,7 @@ import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes/admin';
 import type { BreadcrumbItem } from '@/types';
+import { formatPriceWithCurrency } from '@/lib/formatters';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -38,7 +39,8 @@ defineProps<{
                 <CustomStatCard title="Active Packages" :value="stats.activePackages" trend="+5%" trendType="up"
                     label="Growing library" description="Up from last month" />
 
-                <CustomStatCard title="Expected Revenue" :value="'$' + stats.totalRevenue" label="Total value"
+                <CustomStatCard title="Expected Revenue"
+                    :value="formatPriceWithCurrency(parseFloat(stats.totalRevenue))" label="Total value"
                     description="Pending + Confirmed" />
 
             </div>
