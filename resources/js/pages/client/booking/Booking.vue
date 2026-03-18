@@ -18,27 +18,39 @@ interface Package {
     image: string | null;
 };
 
+
+interface Booking {
+    package_id: number;
+    phone: string;
+    event_date: string;
+    guest_count: number;
+    total_price: number;
+}
+
 const props = defineProps<{
     package: Package;
 }>();
 
-const form = useForm({
+const form = useForm<Booking>({
     package_id: props.package.id,
     phone: '',
     event_date: '',
     guest_count: 20,
+    total_price: 0
 });
 
 // Calculate total dynamically
 const estimatedTotal = computed(() => {
-    return (form.guest_count * props.package.price).toLocaleString(undefined, {
-        style: 'currency',
-        currency: 'PHP'
-    });
+    return form.total_price = (form.guest_count * props.package.price);
 });
+
+
+
 
 const submit = () => {
     const routeData = store();
+    form.total_price = estimatedTotal.value;
+
     form.post(routeData.url, {
         preserveScroll: true,
     });
@@ -117,7 +129,7 @@ const submit = () => {
                                     <Input type="tel" placeholder="0912 345 6789" v-model="form.phone"
                                         :class="{ 'border-red-500 shadow-sm': form.errors.phone }" />
                                     <p v-if="form.errors.phone" class="text-xs text-red-500 mt-1">{{ form.errors.phone
-                                        }}</p>
+                                    }}</p>
                                 </div>
                             </div>
 
@@ -142,7 +154,7 @@ const submit = () => {
                             </div>
 
                             <Button type="submit"
-                                class="w-full bg-slate-900 text-white hover:bg-orange-600 h-16 text-lg font-bold transition-all shadow-lg hover:shadow-orange-200"
+                                class="w-full bg-orange-900 text-white hover:bg-orange-600 h-16 text-lg font-bold transition-all shadow-lg hover:shadow-orange-200"
                                 :disabled="form.processing">
                                 <span v-if="!form.processing">Confirm Reservation Request</span>
                                 <span v-else class="flex items-center gap-2">
@@ -163,7 +175,7 @@ const submit = () => {
                     <div class="space-y-4 relative z-10">
                         <div class="flex justify-between text-slate-400 text-sm">
                             <span>{{ package.name }} (x{{ form.guest_count }})</span>
-                            <span>{{ estimatedTotal }}</span>
+                            <span>{{ formatPriceWithCurrency(estimatedTotal) }}</span>
                         </div>
                         <div class="flex justify-between text-slate-400 text-sm">
                             <span>Service Fee</span>
@@ -171,7 +183,8 @@ const submit = () => {
                         </div>
                         <div class="border-t border-slate-700 pt-4 mt-4 flex justify-between items-end">
                             <span class="font-bold text-lg">Total Estimate</span>
-                            <span class="text-3xl font-black text-white">{{ estimatedTotal }}</span>
+                            <span class="text-3xl font-black text-white">{{ formatPriceWithCurrency(estimatedTotal)
+                                }}</span>
                         </div>
                     </div>
                 </Card>
