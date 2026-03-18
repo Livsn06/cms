@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Package;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -33,5 +34,52 @@ class BookingManagementController extends Controller
             ];
         });
         return Inertia::render('admin/booking/BookingManagement', compact('bookingData'));
+    }
+
+
+
+    // CREATE BOOKING
+    public function create()
+    {
+        $packages = Package::latest()->get();
+        return Inertia::render('admin/booking/CreateBooking', compact('packages'));
+    }
+
+
+
+
+    //STORE BOOKING
+    public function store(Request $request)
+    {
+        $request->validate([
+            'package_id' => 'required | exists:packages,id',
+            'phone' => 'required | numeric',
+            'event_date' => 'required | date',
+            'total_price' => 'required | numeric',
+            'guest_count' => 'required | numeric',
+        ]);
+
+        Booking::create($request->all());
+        return back()->with('success', 'Booking created successfully.');
+    }
+
+
+
+
+
+    // CANCEL BOOKING
+    public function cancel(Booking $booking)
+    {
+        $booking->status = 'cancelled';
+        $booking->save();
+        return redirect()->route('admin.bookings')->with('success', 'Booking cancelled successfully.');
+    }
+
+
+    // DELETE BOOKING
+    public function destroy(Booking $booking)
+    {
+        $booking->delete();
+        return redirect()->route('admin.bookings')->with('success', 'Booking deleted successfully.');
     }
 }
