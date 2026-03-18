@@ -5,6 +5,7 @@ import { computed } from 'vue';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { formatPriceWithCurrency } from '@/lib/formatters';
 
 interface Package {
     id: number;
@@ -19,6 +20,7 @@ interface Booking {
     phone: string;
     event_date: string;
     guest_count: number;
+    total_price: number;
     status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
     package: Package;
 }
@@ -27,12 +29,7 @@ const props = defineProps<{
     booking: Booking;
 }>();
 
-const formattedTotal = computed(() => {
-    return (props.booking.guest_count * props.booking.package.price).toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'PHP'
-    });
-});
+
 
 const formattedDate = computed(() => {
     return new Date(props.booking.event_date).toLocaleDateString('en-US', {
@@ -91,7 +88,9 @@ const handlePrint = () => {
                             <h3 class="text-2xl font-bold text-slate-900">{{ booking.package.name }}</h3>
                             <p class="text-slate-500 text-sm line-clamp-2 mt-1 italic">{{ booking.package.description }}
                             </p>
-                            <p class="mt-2 font-bold text-orange-600">${{ booking.package.price }} / guest</p>
+                            <p class="mt-2 font-bold text-orange-600">{{ formatPriceWithCurrency(booking.package.price)
+                                }}
+                                / guest</p>
                         </div>
                     </div>
 
@@ -123,7 +122,7 @@ const handlePrint = () => {
                             <p class="text-xs text-slate-400">Final price subject to menu changes</p>
                         </div>
                         <div class="text-3xl font-black text-slate-900">
-                            {{ formattedTotal }}
+                            {{ formatPriceWithCurrency(booking.total_price) }}
                         </div>
                     </div>
                 </CardContent>
@@ -142,7 +141,9 @@ const handlePrint = () => {
             </Card>
         </div>
 
-        <p class="mt-8 text-slate-400 text-sm">A confirmation email has been sent to your registered account.</p>
+        <p class="mt-8 text-slate-400 text-sm"><span class="font-bold">Note:</span> We will contact you via phone number
+            you provided to confirm your
+            request. Thank you!</p>
     </div>
 </template>
 

@@ -13,6 +13,7 @@ class Booking extends Model
         'phone',
         'event_date',
         'guest_count',
+        'total_price',
         'status',
     ];
 

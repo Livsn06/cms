@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
-import { EllipsisVertical, ListCollapse, Pencil, Trash, Search, Image, Calendar, Users, Phone } from 'lucide-vue-next';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { EllipsisVertical, ListCollapse, Pencil, Trash, Search, Image, Calendar, Users, Phone, Plus } from 'lucide-vue-next';
 import { Copy, Check } from 'lucide-vue-next';
 import { ref, computed, watch } from 'vue';
 
@@ -38,7 +38,8 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import AppLayout from '@/layouts/AppLayout.vue';
-import { formatDate } from '@/lib/formatters';
+import { formatDate, formatPriceWithCurrency } from '@/lib/formatters';
+import { create, destroy } from '@/routes/admin/bookings';
 import type { BreadcrumbItem } from '@/types';
 
 // Updated breadcrumbs
@@ -63,6 +64,7 @@ interface Booking {
     phone: string;
     event_date: string;
     guest_count: number;
+    total_price: number;
     status: string;
     created_at: string;
     updated_at: string;
@@ -126,15 +128,19 @@ const confirmDelete = () => {
     }
 
     // Replace with your actual delete route
-    // router.delete(route('admin.bookings.destroy', selectedBookingId.value), {
-    //     onStart: () => { isDeleting.value = true; },
-    //     onSuccess: () => {
-    //         isDeleteModalOpen.value = false;
-    //         selectedBookingId.value = null;
-    //     },
-    //     onFinish: () => { isDeleting.value = false; },
-    //     preserveScroll: true,
-    // });
+    router.delete(destroy(selectedBookingId.value), {
+        onStart: () => {
+            isDeleting.value = true;
+        },
+        onSuccess: () => {
+            isDeleteModalOpen.value = false;
+            selectedBookingId.value = null;
+        },
+        onFinish: () => {
+            isDeleting.value = false;
+        },
+        preserveScroll: true,
+    });
 };
 
 const editBooking = (id: number) => {
@@ -157,6 +163,8 @@ const getStatusVariant = (status: string) => {
         default: return 'outline';
     }
 }
+
+
 
 
 
@@ -184,6 +192,12 @@ const copyToClipboard = (text: string, id: number) => {
                         <Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input v-model="searchQuery" placeholder="Search bookings..." class="pl-9" />
                     </div>
+                    <Link :href="create()">
+                        <Button>
+                            <Plus class="mr-1 h-4 w-4" />
+                            New Booking
+                        </Button>
+                    </Link>
                 </div>
             </div>
 
@@ -194,6 +208,7 @@ const copyToClipboard = (text: string, id: number) => {
                             <TableHead class="w-[80px]">ID</TableHead>
                             <TableHead>Package & Client</TableHead>
                             <TableHead>Event Details</TableHead>
+                            <TableHead>Total Price</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead class="text-right">Requested On</TableHead>
                             <TableHead class="w-[50px]"></TableHead>
@@ -205,16 +220,16 @@ const copyToClipboard = (text: string, id: number) => {
                             <TableCell class="font-medium text-muted-foreground">#{{ booking.id }}</TableCell>
                             <TableCell>
                                 <div class="flex items-center">
-                                    <div class="mr-4">
+                                    <div class="mr-4 shrink-0">
                                         <img v-if="booking.package.image" :src="booking.package.image"
-                                            alt="Package Image" class="size-10 rounded-md object-cover" />
+                                            alt="Package Image" class="size-8 rounded-md object-cover" />
                                         <div v-else
-                                            class="size-10 rounded-md flex items-center justify-center bg-muted">
-                                            <Image class="size-6 text-muted-foreground" />
+                                            class="size-8 rounded-md flex items-center justify-center bg-muted-foreground">
+                                            <Image class="size-6 text-white" />
                                         </div>
                                     </div>
-                                    <div>
-                                        <div class="font-bold text-slate-200">{{ booking.package.name }}</div>
+                                    <div class="flex-1 min-w-0 max-w-[200px] md:max-w-[300px] lg:max-w-[400px]">
+                                        <div class="font-bold text-slate-200 truncate">{{ booking.package.name }}</div>
                                         <div class="text-xs text-muted-foreground flex items-center gap-1 group">
                                             <Phone class="size-3" />
                                             <span class="font-medium">{{ booking.phone }}</span>
@@ -240,6 +255,9 @@ const copyToClipboard = (text: string, id: number) => {
                                         {{ booking.guest_count }} Guests
                                     </div>
                                 </div>
+                            </TableCell>
+                            <TableCell>
+                                {{ formatPriceWithCurrency(booking.total_price) }}
                             </TableCell>
                             <TableCell>
                                 <Badge :variant="getStatusVariant(booking.status)" class="capitalize">
@@ -269,7 +287,9 @@ const copyToClipboard = (text: string, id: number) => {
                                                 <Pencil class="mr-2 h-4 w-4" />
                                                 <span>Update Details</span>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem @click="promptDelete(booking.id)"
+                                            <DropdownMenuItem
+                                                v-if="booking.status === 'cancelled' || booking.status === 'completed'"
+                                                @click="promptDelete(booking.id)"
                                                 class="text-red-600 focus:text-red-600">
                                                 <Trash class="mr-2 h-4 w-4" />
                                                 <span>Delete Booking</span>
@@ -289,7 +309,7 @@ const copyToClipboard = (text: string, id: number) => {
 
                     <TableFooter v-if="filteredBookings.length > 0">
                         <TableRow>
-                            <TableCell colspan="6">
+                            <TableCell colspan="7">
                                 <div class="flex items-center justify-between px-2 py-2">
                                     <span class="text-sm text-muted-foreground">
                                         Showing {{ paginatedBookings.length }} of {{ filteredBookings.length }} bookings

@@ -45,6 +45,10 @@ Route::prefix('admin')->group(function () {
         //
 
         Route::get('/bookings', [BookingManagementController::class, 'index'])->name('admin.bookings');
+        Route::get('/bookings/create', [BookingManagementController::class, 'create'])->name('admin.bookings.create');
+        Route::put('/bookings/{booking}/cancel', [BookingManagementController::class, 'cancel'])->name('admin.bookings.cancel');
+        Route::delete('/bookings/{booking}/destroy', [BookingManagementController::class, 'destroy'])->name('admin.bookings.destroy');
+        Route::post('/bookings/store', [BookingManagementController::class, 'store'])->name('admin.bookings.store');
 
 
         //

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('phone');
             $table->date('event_date');
             $table->unsignedInteger('guest_count')->default(0);
+            $table->unsignedInteger('total_price')->default(0);
             $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');
             $table->timestamps();
         });
