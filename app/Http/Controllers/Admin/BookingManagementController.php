@@ -21,6 +21,7 @@ class BookingManagementController extends Controller
                 'phone' => $booking->phone,
                 'event_date' => $booking->event_date,
                 'guest_count' => $booking->guest_count,
+                'total_price' => $booking->total_price,
                 'status' => $booking->status,
                 'created_at' => $booking->created_at,
                 'updated_at' => $booking->updated_at,
