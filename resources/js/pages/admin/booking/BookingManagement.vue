@@ -39,9 +39,8 @@ import {
 } from '@/components/ui/table'
 import AppLayout from '@/layouts/AppLayout.vue';
 import { formatDate, formatPriceWithCurrency } from '@/lib/formatters';
-import type { BreadcrumbItem } from '@/types';
 import { create, destroy } from '@/routes/admin/bookings';
-import { confirm } from '@/routes/two-factor';
+import type { BreadcrumbItem } from '@/types';
 
 // Updated breadcrumbs
 const breadcrumbs: BreadcrumbItem[] = [
@@ -130,12 +129,16 @@ const confirmDelete = () => {
 
     // Replace with your actual delete route
     router.delete(destroy(selectedBookingId.value), {
-        onStart: () => { isDeleting.value = true; },
+        onStart: () => {
+            isDeleting.value = true;
+        },
         onSuccess: () => {
             isDeleteModalOpen.value = false;
             selectedBookingId.value = null;
         },
-        onFinish: () => { isDeleting.value = false; },
+        onFinish: () => {
+            isDeleting.value = false;
+        },
         preserveScroll: true,
     });
 };

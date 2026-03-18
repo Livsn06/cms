@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
-import { Calendar, Phone, Users, DollarSign, CheckCircle } from 'lucide-vue-next';
 import { computed, watch } from 'vue';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
@@ -49,7 +48,11 @@ const form = useForm<BookingForm>({
 // Calculate total price based on selected package and guest count
 const calculatedTotal = computed(() => {
     const selectedPackage = props.packages.find(p => p.id === form.package_id);
-    if (!selectedPackage) return 0;
+
+    if (!selectedPackage) {
+        return 0;
+    }
+
     return selectedPackage.price * form.guest_count;
 });
 

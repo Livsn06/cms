@@ -3,9 +3,9 @@ import { Head } from '@inertiajs/vue3';
 import CustomStatCard from '@/components/CustomStatCard.vue';
 import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { formatPriceWithCurrency } from '@/lib/formatters';
 import { dashboard } from '@/routes/admin';
 import type { BreadcrumbItem } from '@/types';
-import { formatPriceWithCurrency } from '@/lib/formatters';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

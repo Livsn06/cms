@@ -41,7 +41,7 @@ const form = useForm<Booking>({
 
 // Calculate total dynamically
 const estimatedTotal = computed(() => {
-    return form.total_price = (form.guest_count * props.package.price);
+    return form.guest_count * props.package.price;
 });
 
 
@@ -129,7 +129,7 @@ const submit = () => {
                                     <Input type="tel" placeholder="0912 345 6789" v-model="form.phone"
                                         :class="{ 'border-red-500 shadow-sm': form.errors.phone }" />
                                     <p v-if="form.errors.phone" class="text-xs text-red-500 mt-1">{{ form.errors.phone
-                                    }}</p>
+                                        }}</p>
                                 </div>
                             </div>
 
@@ -184,7 +184,7 @@ const submit = () => {
                         <div class="border-t border-slate-700 pt-4 mt-4 flex justify-between items-end">
                             <span class="font-bold text-lg">Total Estimate</span>
                             <span class="text-3xl font-black text-white">{{ formatPriceWithCurrency(estimatedTotal)
-                                }}</span>
+                            }}</span>
                         </div>
                     </div>
                 </Card>
