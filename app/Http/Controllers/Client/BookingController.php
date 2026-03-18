@@ -30,7 +30,8 @@ class BookingController extends Controller
             'package_id' => 'required|exists:packages,id',
             'phone' => 'required | min:10 | max:20',
             'event_date' => 'required | date',
-            'guest_count' => 'required | numeric'
+            'guest_count' => 'required | numeric',
+            'total_price' => 'required | numeric'
         ]);
 
         $booking = Booking::create($request->all());
@@ -55,6 +56,7 @@ class BookingController extends Controller
             'phone' => $booking->phone,
             'event_date' => $booking->event_date,
             'guest_count' => $booking->guest_count,
+            'total_price' => $booking->total_price,
             'status' => $booking->status,
             'package' => $package
         ];
